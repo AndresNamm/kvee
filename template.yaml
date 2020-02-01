@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 900
+
+Parameters:
+    EnvironmentParameter:
+        Type: String
+        Default: dev
+        AllowedValues:
+            - dev
+            - stg
+            - prod
+        Description: Environment
+Resources:
+  KvScraperunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: kv_scraper.lambda_handler
+      Runtime: python3.7
+      FunctionName: !Sub "${EnvironmentParameter}-kv-ee-scraper"
+      Environment:
+        Variables:
+            EXTERNAL_LOG_LEVEL: INFO
+            INTERNAL_LOG_LEVEL: DEBUG
+            LOG_FORMAT: json
+            ENVIRONMENT: !Ref EnvironmentParameter
+      Policies:
+        -
+            Version: "2012-10-17"
+            Statement:
+                -   Effect: Allow
+                    Action:
+                        - "s3:GetObject"
+                        - "s3:PutObject"
+                        - "s3:ListBucket"
+                        - "s3:GetObjectTagging"
+                        - "s3:PutObjectTagging"
+                        - "s3:PutObjectAcl"
+                        - "s3:GetObjectAcl"
+                    Resource: 
+                        - !Join [ "", [ "arn:aws:s3:::", !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental" ] ]
+                        - !Join [ "", [ "arn:aws:s3:::", !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental/*" ] ]
+      Events:
+        UpdateRakvere:
+          Properties:
+            Schedule: rate(1 day)
+            Input: '{"city_name":"rakvere","deal_type":"all"}'
+          Type: Schedule
+        UpdateTartu:
+          Properties:
+            Schedule: rate(1 day)
+            Input: '{"city_name":"tartu","deal_type":"all"}'
+          Type: Schedule
+        UpdateTallinn:
+          Properties:
+            Schedule: rate(1 day)
+            Input: '{"city_name":"tallinn","deal_type":"all"}'
+          Type: Schedule
+
+  ImportProcessedBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+        BucketName: !Join [ "", [ !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental" ] ]
+        AccessControl: "Private"
+
