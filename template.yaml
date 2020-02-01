@@ -50,17 +50,17 @@ Resources:
       Events:
         UpdateRakvere:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(17 10 * * ? *)
             Input: '{"city_name":"rakvere","deal_type":"all"}'
           Type: Schedule
         UpdateTartu:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(18 10 * * ? *)
             Input: '{"city_name":"tartu","deal_type":"all"}'
           Type: Schedule
         UpdateTallinn:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(19 10 * * ? *)
             Input: '{"city_name":"tallinn","deal_type":"all"}'
           Type: Schedule
 

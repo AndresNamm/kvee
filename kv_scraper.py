@@ -12,6 +12,7 @@ from pathlib import Path
 from datetime import date
 import logging.config
 import time
+import json
 
 #sd
 
@@ -84,7 +85,7 @@ def main(city_name="",deal_type=2):
     # PARAMETER PARSING 
 
     if city_name=="":
-        cities=[tartu]
+        cities=[rakvere]
     elif city_name=="all":
         cities=[rakvere,tartu,tallinn]
     else:
@@ -103,9 +104,14 @@ def main(city_name="",deal_type=2):
         today=date.today().strftime("%Y-%m-%d")
         room_sizes=[1,2,3,4,5]
 
-
     # ACTUAL DOWNLOAD
 
+    # improve based on
+    # FOR DEAL TYPE  energy_certs=A,B,C,D,E,F
+    # FOR c%5B%5D=800 = uusarendus
+    #
+    #keyword_dev_type="c%5B%5D"
+    #dev_type={800:"uusarendus",38}
     for deal_type in deal_types:
         for city in cities:
             obj = [ ]
@@ -118,13 +124,18 @@ def main(city_name="",deal_type=2):
                 det+=tmp_det     
             if WRITE_TO_S3:
                 bucketname=f"{env}-kinnisvara-etl-raw-data-daily-incremental"
-                objects_key=f"{deals[deal_type]}/{city.name}/{today}/kv_objects.json"
-                object_details_key=f"{deals[deal_type]}/{city.name}/{today}/kv_objects_details.json"
-                s3_utils.s3_put_dict(list(map(lambda kv_obj: kv_obj.__dict__,obj)),bucketname,objects_key)
-                logger.info("Stored objects to S3")
-                s3_utils.s3_put_dict(list(map(lambda kv_obj_det: kv_obj_det.__dict__,det)),bucketname,object_details_key)
-                logger.info("Stored object details to S3")
+                objects_key=f"objects/{deals[deal_type]}/{city.name}/{today}/kv_objects.json"
+                object_details_key=f"details/{deals[deal_type]}/{city.name}/{today}/kv_objects_details.json"
+                
+                s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps(kv_obj.__dict__),obj)),bucketname,objects_key)
+                #s3_utils.s3_put_dict(list(map(lambda kv_obj: kv_obj.__dict__,obj)),bucketname,object_details_key)
+                logger.info(f"Stored objects to S3 s3://{bucketname}/{objects_key}")
+                #s3_utils.s3_put_dict(list(map(lambda kv_obj_det: kv_obj_det.__dict__,det)),bucketname,object_details_key)
+                s3_utils.s3_put_rows(list(map(lambda kv_obj_det: json.dumps(kv_obj_det.__dict__),det)),bucketname,object_details_key)
+            
+                logger.info(f"Stored object details to S3 s3://{bucketname}/{object_details_key}")
 def lambda_handler(event, context):
+
     city_name=event["city_name"]
     deal_type=event["deal_type"]
     main(city_name,deal_type)

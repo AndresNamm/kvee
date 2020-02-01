@@ -1,1 +1,3 @@
-aws lambda invoke --cli-read-timeout 600 --function-name "$ENV-kv-ee-scraper"  --payload '{"city_name":"rakvere","deal_type":"all"}' outfile.txt
+aws lambda invoke --cli-read-timeout 600 --function-name "$ENVIRONMENT-kv-ee-scraper"  --payload '{"city_name":"rakvere","deal_type":"all"}' outfile.txt
+aws lambda invoke --cli-read-timeout 600 --function-name "$ENVIRONMENT-kv-ee-scraper"  --payload '{"city_name":"tartu","deal_type":"all"}' outfile.txt
+aws lambda invoke --cli-read-timeout 600 --function-name "$ENVIRONMENT-kv-ee-scraper"  --payload '{"city_name":"tallinn","deal_type":"all"}' outfile.txt

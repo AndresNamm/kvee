@@ -54,20 +54,20 @@ Resources:
       Events:
         UpdateRakvere:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(17 10 * * ? *)
             Input: '{"city_name":"rakvere","deal_type":"all"}'
           Type: Schedule
         UpdateTartu:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(18 10 * * ? *)
             Input: '{"city_name":"tartu","deal_type":"all"}'
           Type: Schedule
         UpdateTallinn:
           Properties:
-            Schedule: rate(1 day)
+            Schedule: cron(19 10 * * ? *)
             Input: '{"city_name":"tallinn","deal_type":"all"}'
           Type: Schedule
-      CodeUri: s3://andresmb/6d99398b97ea1894a1049550d341b96d
+      CodeUri: s3://andresmb/365126a1a8181643de6522274a303b01
   ImportProcessedBucket:
     Type: AWS::S3::Bucket
     Properties:
