@@ -77,5 +77,6 @@ data/
 *.pyc
 .vscode
 .aws-sam
-
-
+.venv
+.ipynb_*
+packaged.yaml

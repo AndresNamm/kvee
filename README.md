@@ -1,4 +1,4 @@
-# STRUCTURE of important files
+# important files
 
 
 + template.yaml

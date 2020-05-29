@@ -36,7 +36,7 @@ class KVBuilder:
         self.session = HTMLSession()
 
     def format_object_url(self,deal_type,county,parish,rooms):
-        object_uri = f"https://www.kv.ee/?act=search.objectcoords&dea ll_type={deal_type}&page=1&orderby=ob&page_size=10000&search_type=new&county={county}&parish={parish}&zoom=25&rooms_min={rooms}&rooms_max={rooms}"
+        object_uri = f"https://www.kv.ee/?act=search.objectcoords&deal_type={deal_type}&page=1&orderby=ob&page_size=100000&search_type=new&county={county}&parish={parish}&zoom=25&rooms_min={rooms}&rooms_max={rooms}"
         return  object_uri
 
     def get_object_details(self, kv_object,city,room_nr):
@@ -71,7 +71,7 @@ class KVBuilder:
         kv_object_details:List[KvObjectDetails]=list(map(lambda kv_object: self.get_object_details(kv_object=kv_object,city=city,room_nr = room_nr),kv_objects))
         return (kv_objects,kv_object_details)
         
-def main(city_name="",deal_type=2):
+def main(city_name="rakvere",deal_type="all",room_nr=1):
     kv = KVBuilder()
     
     # INITIAL CONFIGURATION FOR DOWNLOAD
@@ -81,9 +81,7 @@ def main(city_name="",deal_type=2):
     tartu=City(name="Tartu",county=12,parish=1063)
     deals={1:"sale",2:"rent"}
     cities_k={"rakvere":rakvere,"tartu":tartu,"tallinn":tallinn}
-
     # PARAMETER PARSING 
-
     if city_name=="":
         cities=[rakvere]
     elif city_name=="all":
@@ -95,50 +93,44 @@ def main(city_name="",deal_type=2):
         deal_types=[deal_type]
     else:
         deal_types=[1,2]
-
-
-    if(env=="dev"):
-        today=date.today().strftime("%Y-%m-%d")
-        room_sizes=[3]
-    else:
-        today=date.today().strftime("%Y-%m-%d")
+        
+    today=date.today().strftime("%Y-%m-%d")
+    if(room_nr=="all"):
         room_sizes=[1,2,3,4,5]
+    else:
+        room_sizes=[room_nr]
+
 
     # ACTUAL DOWNLOAD
-
     # improve based on
     # FOR DEAL TYPE  energy_certs=A,B,C,D,E,F
     # FOR c%5B%5D=800 = uusarendus
-    #
     #keyword_dev_type="c%5B%5D"
     #dev_type={800:"uusarendus",38}
     for deal_type in deal_types:
         for city in cities:
-            obj = [ ]
-            det = [ ]
             for room_size in room_sizes :
-                logger.info(f"Fetching city named {city.name} with deal type {deal_type}")
-                tmp_obj,tmp_det = kv.fetch_city_objects( city, deal_type=deal_type, room_nr = room_size)
-                logger.info("Object results are downloaded")
-                obj+=tmp_obj
-                det+=tmp_det     
-            if WRITE_TO_S3:
-                bucketname=f"{env}-kinnisvara-etl-raw-data-daily-incremental"
-                objects_key=f"objects/{deals[deal_type]}/{city.name}/{today}/kv_objects.json"
-                object_details_key=f"details/{deals[deal_type]}/{city.name}/{today}/kv_objects_details.json"
-                
-                s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps(kv_obj.__dict__),obj)),bucketname,objects_key)
-                #s3_utils.s3_put_dict(list(map(lambda kv_obj: kv_obj.__dict__,obj)),bucketname,object_details_key)
-                logger.info(f"Stored objects to S3 s3://{bucketname}/{objects_key}")
-                #s3_utils.s3_put_dict(list(map(lambda kv_obj_det: kv_obj_det.__dict__,det)),bucketname,object_details_key)
-                s3_utils.s3_put_rows(list(map(lambda kv_obj_det: json.dumps(kv_obj_det.__dict__),det)),bucketname,object_details_key)
-            
-                logger.info(f"Stored object details to S3 s3://{bucketname}/{object_details_key}")
-def lambda_handler(event, context):
+                obj = [ ]
+                det = [ ]
+                logger.info(f"Fetching city named {city.name} with deal type {deal_type} and room_size {room_size}")
+                obj,det = kv.fetch_city_objects( city, deal_type=deal_type, room_nr = room_size)
+                logger.info("Object results are downloaded")  
+                if WRITE_TO_S3:
+                    bucketname=f"{env}-kinnisvara-etl-raw-data-daily-incremental"
+                    objects_key=f"objects/{deals[deal_type]}/{city.name}/{today}/{room_size}/kv_objects.json"
+                    object_details_key=f"details/{deals[deal_type]}/{city.name}/{today}/{room_size}/kv_objects_details.json"
+                    s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps(kv_obj.__dict__),obj)),bucketname,objects_key)
+                    #s3_utils.s3_put_dict(list(map(lambda kv_obj: kv_obj.__dict__,obj)),bucketname,object_details_key)
+                    logger.info(f"Stored objects to S3 s3://{bucketname}/{objects_key}")
+                    #s3_utils.s3_put_dict(list(map(lambda kv_obj_det: kv_obj_det.__dict__,det)),bucketname,object_details_key)
+                    s3_utils.s3_put_rows(list(map(lambda kv_obj_det: json.dumps(kv_obj_det.__dict__),det)),bucketname,object_details_key)
+                    logger.info(f"Stored object details to S3 s3://{bucketname}/{object_details_key}")
 
+def lambda_handler(event, context):
     city_name=event["city_name"]
     deal_type=event["deal_type"]
-    main(city_name,deal_type)
+    room_nr=event["room_nr"]
+    main(city_name,deal_type,room_nr)
 
 if __name__ == "__main__":
     main()
