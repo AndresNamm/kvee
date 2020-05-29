@@ -1,0 +1,1 @@
+SELECT id, max(date_added) as max_date ,count(distinct(date_added)) cnt FROM kv_object_updates GROUP BY 1 ORDER BY 3,2
