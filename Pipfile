@@ -2,6 +2,7 @@
 name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
+jupyter = "*"
 
 [dev-packages]
 pylint = "*"
@@ -11,7 +12,7 @@ scrapy = "*"
 jupyterthemes = "*"
 jupyter-contrib-nbextensions = "*"
 autopep8 = "*"
-
+plotly = "*"
 [packages]
 appdirs = "==1.4.3"
 beautifulsoup4 = "==4.8.2"
@@ -35,10 +36,7 @@ tqdm = "==4.41.1"
 urllib3 = "==1.25.7"
 w3lib = "==1.21.0"
 websockets = "==8.1"
-plotly = "*"
 ipywidgets = "*"
-jupyter = "*"
-scrapy = "*"
 
 [requires]
 python_version = "3.8"

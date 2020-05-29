@@ -3,7 +3,7 @@ import collections
 import csv
 import logging
 import os
-from src.models import KvObject
+from util_functions.models import KvObject
 from requests_html import HTMLSession
 LOGLEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
 

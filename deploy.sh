@@ -1,8 +1,45 @@
-source prod-env.sh
-ENVIRONMENT=$1
-sam build
-#Step 3 - Package your application
-sam package --output-template packaged.yaml --s3-bucket andresmb
-#Step 4 - Deploy your application
-sam deploy --template-file packaged.yaml --region eu-west-1 --capabilities CAPABILITY_IAM --stack-name $ENVIRONMENT-aws-sam-kv --parameter-overrides "EnvironmentParameter=$ENVIRONMENT"
-echo "Finished Depoloy"
+#!/bin/bash
+ENV=$1
+echo "RUNNING FOR ENV: ${ENV}"
+run_sam () {
+    set +e
+    STDERR=$(( make deploy "$@" ) 2>&1)
+    ERROR_CODE=$?
+    echo "CALLED FOR: ${@}"
+    echo "RESPONSE CODE: ${ERROR_CODE}"
+    if [[ "${ERROR_CODE}" -ne "0" ]]; then 
+        echo ${STDERR} 1>&2
+    fi
+
+    if [[ "${ERROR_CODE}" -eq "2" && "${STDERR}" =~ "No changes to deploy" ]]; then 
+        echo "THIS IS OK: Means no changes needed"
+        set -e    
+        return 0; 
+    fi 
+    set -e
+    echo "RETURNING: ${ERROR_CODE}"
+    return ${ERROR_CODE}
+}
+
+run_sam_ssm () {
+    set +e
+    STDERR=$(( make deploy-ssm "$@" ) 2>&1)
+    ERROR_CODE=$?
+    echo "CALLED FOR: ${@}"
+    echo "RESPONSE CODE: ${ERROR_CODE}"
+    if [[ "${ERROR_CODE}" -ne "0" ]]; then 
+        echo ${STDERR} 1>&2
+    fi
+
+    if [[ "${ERROR_CODE}" -eq "2" && "${STDERR}" =~ "No changes to deploy" ]]; then 
+        echo "THIS IS OK: Means no changes needed"
+        set -e    
+        return 0; 
+    fi 
+    set -e
+    echo "RETURNING: ${ERROR_CODE}"
+    return ${ERROR_CODE}
+}
+
+
+run_sam ENVIRONMENT=${ENV:-dev} SOURCE='aws-sam-kv' 

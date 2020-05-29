@@ -4,9 +4,9 @@ import requests
 import collections
 import logging
 import numpy
-import src.scraper_utils as scraper_utils
-import src.s3_utils as s3_utils
-from src.models import KvObject,KvObjectDetails,City
+import util_functions.scraper_utils as scraper_utils
+import util_functions.s3_utils as s3_utils
+from util_functions.models import KvObject,KvObjectDetails,City
 import os
 from pathlib import Path
 from datetime import date
@@ -29,8 +29,6 @@ logger = logging.getLogger(__name__)
 # TODO: set this up somewhere els
 #logging.config.fileConfig(fname='logging.conf', disable_existing_loggers=False)
 #logging.debug("debug")
-
-
 class KVBuilder:
     def __init__(self):
         self.session = HTMLSession()
@@ -73,7 +71,6 @@ class KVBuilder:
         
 def main(city_name="rakvere",deal_type="all",room_nr=1):
     kv = KVBuilder()
-    
     # INITIAL CONFIGURATION FOR DOWNLOAD
     # TODO: to ssm 
     rakvere=City(name="Rakvere",county=7,parish=1050)
@@ -82,25 +79,23 @@ def main(city_name="rakvere",deal_type="all",room_nr=1):
     deals={1:"sale",2:"rent"}
     cities_k={"rakvere":rakvere,"tartu":tartu,"tallinn":tallinn}
     # PARAMETER PARSING 
-    if city_name=="":
-        cities=[rakvere]
-    elif city_name=="all":
+
+    if city_name=="all":
         cities=[rakvere,tartu,tallinn]
     else:
         cities=[cities_k[city_name]]
-
-    if deal_type!="all":
-        deal_types=[deal_type]
-    else:
+    
+    if deal_type=="all":
         deal_types=[1,2]
-        
-    today=date.today().strftime("%Y-%m-%d")
+    else:
+        deal_types=[deal_type]     
+    
     if(room_nr=="all"):
         room_sizes=[1,2,3,4,5]
     else:
         room_sizes=[room_nr]
 
-
+    today=date.today().strftime("%Y-%m-%d")
     # ACTUAL DOWNLOAD
     # improve based on
     # FOR DEAL TYPE  energy_certs=A,B,C,D,E,F
