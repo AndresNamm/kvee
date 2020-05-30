@@ -28,7 +28,6 @@ def s3_put_dict(dict_obj,bucketname,key):
     serializedMyData = json.dumps(myData)
     s3.put_object(Bucket=bucketname,Key=key,Body=serializedMyData)
 
-
 def s3_retrieve_rows(bucketname,key):
     #Connect to S3
     #Read the object stored in key 'myList001'
@@ -42,10 +41,7 @@ def s3_put_rows(row_list,bucketname,key):
     myList=row_list
     #Serialize the object 
     serializedListObject=pickle.dumps(myList)
-    
     serializedListObject="\n".join(myList)
-
-    
     logger.debug(myList)
     #Write to Bucket named 'mytestbucket' and 
     #Store the list using key myList001

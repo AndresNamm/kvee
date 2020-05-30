@@ -16,6 +16,8 @@ import json
 
 #sd
 
+
+
 WRITE_TO_LOCAL_CSV=False
 WRITE_TO_S3=True
 
