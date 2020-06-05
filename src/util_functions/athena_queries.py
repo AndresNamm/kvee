@@ -1,6 +1,6 @@
 import pandas as pd
 from pyathena import connect
-import awswrangler as wr
+#import awswrangler as wr
 
 class AthenaQueries:
 
@@ -45,10 +45,10 @@ class AthenaQueries:
         df = self.athena_query(query)
         return df
 
-    def write_to_athena_table(self,df,path,table):
-        wr.s3.to_parquet(
-        df=df,
-        path=path,
-        dataset=True,
-        database="default",
-        table=table)
+    # def write_to_athena_table(self,df,path,table):
+    #     wr.s3.to_parquet(
+    #     df=df,
+    #     path=path,
+    #     dataset=True,
+    #     database="default",
+    #     table=table)
