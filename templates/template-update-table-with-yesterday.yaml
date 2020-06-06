@@ -39,8 +39,9 @@ Resources:
                   Action:
                       - "s3:*"
                   Resource: 
-                      - !Join [ "", [ "arn:aws:s3:::", !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental" ] ]
-                      - !Join [ "", [ "arn:aws:s3:::", !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental/*" ] ]
+
+                      - !Join [ "", [ "arn:aws:s3:::", "*-kinnisvara-etl-raw-data-daily-incremental" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::", "*-kinnisvara-etl-raw-data-daily-incremental/*" ] ]
                       - !Join [ "", [ "arn:aws:s3:::",  "kv-analysis" ] ]
                       - !Join [ "", [ "arn:aws:s3:::",  "kv-analysis/*" ] ]
                       - !Join [ "", [ "arn:aws:s3:::",  "andresmb" ] ]
