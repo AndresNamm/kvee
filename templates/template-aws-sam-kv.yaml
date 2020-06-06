@@ -154,9 +154,4 @@ Resources:
             Schedule: cron(48 16 * * ? *)
             Input: '{"city_name":"tallinn","deal_type":2,"room_nr":5}'
           Type: Schedule
-  ImportProcessedBucket:
-    Type: AWS::S3::Bucket
-    Properties: 
-        BucketName: !Join [ "", [ !Ref EnvironmentParameter, "-kinnisvara-etl-raw-data-daily-incremental" ] ]
-        AccessControl: "Private"
 
