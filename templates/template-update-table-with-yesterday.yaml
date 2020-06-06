@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 900
+
+Parameters:
+    EnvironmentParameter:
+        Type: String
+        Default: dev
+        AllowedValues:
+            - dev
+            - stg
+            - prod
+        Description: Environment
+Resources:
+  KvScraperUpdates:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ../src/
+      Handler: update_update_table.lambda_handler
+      Runtime: python3.8
+      FunctionName: !Sub "${EnvironmentParameter}-kv-ee-updater"
+      Environment:
+        Variables:
+            EXTERNAL_LOG_LEVEL: INFO
+            INTERNAL_LOG_LEVEL: DEBUG
+            LOG_FORMAT: json
+            ENVIRONMENT: !Ref EnvironmentParameter
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+              -   Effect: Allow
+                  Action:
+                      - "s3:*"
+                  Resource: 
+
+                      - !Join [ "", [ "arn:aws:s3:::", "*-kinnisvara-etl-raw-data-daily-incremental" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::", "*-kinnisvara-etl-raw-data-daily-incremental/*" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::",  "kv-analysis" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::",  "kv-analysis/*" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::",  "andresmb" ] ]
+                      - !Join [ "", [ "arn:aws:s3:::",  "andresmb/*" ] ]
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'athena:*'
+              Resource:
+                - '*'
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - "glue:*"
+              Resource:
+                - '*'
+
+      Events:
+        UpdateTables:
+          Properties:
+            Schedule: cron(1 1 * * ? *)
+            Input: '{"nothing":"nothing"}'
+          Type: Schedule
+
