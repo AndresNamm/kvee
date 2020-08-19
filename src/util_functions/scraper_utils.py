@@ -8,32 +8,36 @@ from requests_html import HTMLSession
 LOGLEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
 
 
+external_log_level=os.getenv('EXTERNAL_LOG_LEVEL','INFO')
+internal_log_level=os.getenv('INTERNAL_LOG_LEVEL','DEBUG')
+logging.basicConfig(level=external_log_level)
+logging.getLogger(__name__).setLevel(internal_log_level)
+logger = logging.getLogger(__name__)
 
-def parse_details_from_html(request_response):
+def parse_details_from_html(request_response)->dict:
     r=request_response
     parsed_dic={}
-
-    try:
-        absolute_size = r.html.find( 'p.object-meta',first = True )  # '<p class="object-meta">2 tuba<span class="sep">|</span>35 m²</p>'
-        absolute_size=absolute_size.text.split( '|' )[-1]
-        if (absolute_size!=""):
-            parsed_dic[ 'absolute_size' ] = int(absolute_size.split( '\xa0' )[0])
-        else:
-            parsed_dic[ 'absolute_size' ]=0
-    except Exception as e:
-        logging.error("Issue with parsing the absolute sizes")
-        logging.error(r.text)
-        logging.error(e)
-        parsed_dic[ 'absolute_size' ]=0
-
-
-    absolute_price = r.html.find( 'p.object-price strong', first = True )  # '<strong>31 000 €</strong>'
-
-    parsed_dic['absolute_price'] = int( ''.join( absolute_price.text.split( '\xa0' )[ :-1 ] ) )
-    parsed_dic['title'] = r.html.find( 'p.object-important-note',first = True ).text  # <p class="object-important-note">MÜÜA  KORRALIK 2 TOALINE KORTER KESKLINNAS</p>
-
+    raw_absolute_size=r.html.find('span.gm-desktop',first=True)
+    raw_absolute_price=r.html.find('h3.gm-overlay-price',first=True)
+    raw_title=r.html.find('h2.gm-overlay-title',first=True)
+    raw_info=r.html.find('p.gm-overlay-info-1',first=True)
+    for line in raw_absolute_size.text.split('\n'):
+        if 'Pind:' in line:      
+            parsed_dic['absolute_size'] = line.split(':')[1].strip().split('\xa0')[0]
+    parsed_dic['absolute_price'] = int(raw_absolute_price.text.split( '\xa0' )[0])
+    parsed_dic['title']=raw_title.text
+    # because some items have accented letter we want to remove these for safety 
+    replace_map={'köök':'kitchen','küte_ja_ventilatsioon':'heating','sanruum':'sanruum','side_ja_turvalisus':'side_ja_turvalisus','ümbrus':'area','lisainfo':'lisainfo'}
+    info={}
+    for item in raw_info.text.split('\n'):
+        if len(item.split(":"))>1:
+            key=item.split(":")[0].replace(' ','_').lower() 
+            if key in replace_map:
+                key=replace_map[key]
+                val=item.split(":")[1]
+                info[key]=val
+    parsed_dic.update(info)
     return parsed_dic
-
 
 def handle_search_results( kv_json_response, city) :
     data_objects = [ ]
@@ -52,8 +56,7 @@ def handle_search_results( kv_json_response, city) :
                 result=KvObject(id=obj_id,lng=lng,lat=lat,name=city.name,county=city.county,parish=city.parish)
                 data_objects.append(result)
     else :
-        for marker in kv_json_response :
-
+        for marker in kv_json_response:
             lat = marker[ 0 ]
             lng = marker[ 1 ]
             obj_id = marker[ 2 ]

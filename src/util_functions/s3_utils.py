@@ -7,14 +7,13 @@ from datetime import date
 import json
 import os
 import logging
-
+from typing import Final
 
 env=os.getenv('ENVIRONMENT','dev')
-external_log_level=os.getenv('EXTERNAL_LOG_LEVEL','INFO')
-internal_log_level=os.getenv('INTERNAL_LOG_LEVEL','DEBUG')
-logging.basicConfig(level=external_log_level)
-logging.getLogger(__name__).setLevel(internal_log_level)
+log_level: Final[str] = os.getenv('LOGLEVEL', 'INFO')
+logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
+
 s3 = boto3.client('s3')
 
 def s3_retrieve_dict(bucketname,key):
@@ -42,7 +41,7 @@ def s3_put_rows(row_list,bucketname,key):
     #Serialize the object 
     serializedListObject=pickle.dumps(myList)
     serializedListObject="\n".join(myList)
-    logger.debug(myList)
+    #logger.debug(myList)
     #Write to Bucket named 'mytestbucket' and 
     #Store the list using key myList001
     s3.put_object(Bucket=bucketname,Key=key,Body=serializedListObject)

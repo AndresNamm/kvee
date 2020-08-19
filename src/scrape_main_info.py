@@ -85,7 +85,8 @@ def get_object_details_info(object_id):
             table[col[i+1].text]=val[i].text
         res2 = r.html.find('div.object-article-section',first=False)
         lst = [ i.html for i in res2]
-        return {"id":object_id, **map_table_names(table) ,"raw_data":lst}
+        todays_date=datetime.today().strftime('%Y-%m-%d')
+        return {"id":object_id, **map_table_names(table) ,"raw_data":lst,"date_added":todays_date}
     except: 
         return {"id":object_id}
 
@@ -94,12 +95,11 @@ def read_in_objects(limit=100):
     res = q.athena_query(sql)
     return res["id"].tolist()
 
-
 def add_scraper_objects(lst):
     bucketname="kv-analysis"
     rnd = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
-    s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps(kv_obj),lst)),bucketname,f"object_info/{rnd}-kv.json")
     todays_date=datetime.today().strftime('%Y-%m-%d')
+    s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps(kv_obj),lst)),bucketname,f"object_info/{rnd}-kv.json")
     s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps({"id":kv_obj["id"],"date_added":todays_date}),lst)),bucketname,f"kv_object_updates/{rnd}-kv.json")
 
 

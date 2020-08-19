@@ -14,6 +14,7 @@ jupyter-contrib-nbextensions = "*"
 autopep8 = "*"
 plotly = "*"
 awswrangler = "*"
+pyaml = "*"
 
 [packages]
 numpy = "==1.18.0"
