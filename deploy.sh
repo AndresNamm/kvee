@@ -45,3 +45,6 @@ run_sam_ssm () {
 run_sam ENVIRONMENT=${ENV:-dev} SOURCE='aws-sam-kv' 
 run_sam ENVIRONMENT=${ENV:-dev} SOURCE='update-table-with-yesterday'
 run_sam ENVIRONMENT=${ENV:-dev} SOURCE='scrape-main-info' 
+
+
+rm -rf templates/packaged-*
