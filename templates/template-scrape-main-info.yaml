@@ -28,8 +28,7 @@ Resources:
       FunctionName: !Sub "${EnvironmentParameter}-kv-ee-scraper-details"
       Environment:
         Variables:
-            EXTERNAL_LOG_LEVEL: INFO
-            INTERNAL_LOG_LEVEL: DEBUG
+            LOG_LEVEL: INFO
             LOG_FORMAT: json
             ENVIRONMENT: !Ref EnvironmentParameter
       Policies:

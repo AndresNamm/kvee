@@ -1,5 +1,4 @@
 from util_functions.templater import  render_template
-
 import json
 env = "prod"
 
@@ -18,7 +17,6 @@ aws lambda invoke --cli-read-timeout 900 --cli-binary-format raw-in-base64-out -
 end=`date +%s`
 echo Execution time was `expr $end - $start` seconds.
 """
-
 
 # remote_run = """
 # aws lambda invoke --cli-read-timeout 900 --cli-binary-format raw-in-base64-out --function-name "..{ENV}..-kv-ee-scraper"  --payload '..{INPUT}..' outfile.txt

@@ -4,7 +4,7 @@ import csv
 import logging
 import os
 from requests_html import HTMLSession
-from typing import List
+from typing import List, Final
 from requests_html import HTMLSession
 import requests
 import collections
@@ -48,10 +48,8 @@ map_names = {'id': 'id',
  'Korruseid': 'total_floors'}
 
 env=os.getenv('ENVIRONMENT','dev')
-external_log_level=os.getenv('EXTERNAL_LOG_LEVEL','INFO')
-internal_log_level=os.getenv('INTERNAL_LOG_LEVEL','DEBUG')
-logging.basicConfig(level=external_log_level)
-logging.getLogger(__name__).setLevel(internal_log_level)
+log_level: Final[str] = os.getenv('LOGLEVEL', 'INFO')
+logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
 
 
@@ -103,10 +101,11 @@ def add_scraper_objects(lst):
     s3_utils.s3_put_rows(list(map(lambda kv_obj: json.dumps({"id":kv_obj["id"],"date_added":todays_date}),lst)),bucketname,f"kv_object_updates/{rnd}-kv.json")
 
 
-def main(object_count=4):
+def main(object_count=4, debug=False):
     res = []
     for obj in read_in_objects(object_count):
         all_details = get_object_details_info(obj)
+        logger.debug(all_details)
         res.append(all_details)
         
     add_scraper_objects(res)
@@ -118,8 +117,9 @@ def lambda_handler(event, context):
         object_count=event["object_count"]
     main(object_count=object_count)
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": 
+    logging.getLogger(__name__).setLevel('DEBUG')
+    main(object_count=10)
 
 
 
