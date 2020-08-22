@@ -13,8 +13,8 @@ class KvObjectDetails:
     parish: str
     room_nr: str
     title: str=""
-    absolute_size:str=""
-    absolute_price:str=""
+    abs_size:str=""
+    abs_price:str=""
     kitchen:str=""
     heating:str=""
     sanruum:str=""

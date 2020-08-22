@@ -19,12 +19,15 @@ def parse_details_from_html(request_response)->dict:
     parsed_dic={}
     raw_absolute_size=r.html.find('span.gm-desktop',first=True)
     raw_absolute_price=r.html.find('h3.gm-overlay-price',first=True)
-    raw_title=r.html.find('h2.gm-overlay-title',first=True)
+    
+    raw_title= r.html.find('p.gm-overlay-header',first=True)
+    if raw_title==None:
+        raw_title=r.html.find('h2.gm-overlay-title',first=True)
     raw_info=r.html.find('p.gm-overlay-info-1',first=True)
     for line in raw_absolute_size.text.split('\n'):
         if 'Pind:' in line:      
-            parsed_dic['absolute_size'] = line.split(':')[1].strip().split('\xa0')[0]
-    parsed_dic['absolute_price'] = int(raw_absolute_price.text.split( '\xa0' )[0])
+            parsed_dic['abs_size'] = line.split(':')[1].strip().split('\xa0')[0]
+    parsed_dic['abs_price'] = int("".join(raw_absolute_price.text.split( '\xa0' )[:-1]))
     parsed_dic['title']=raw_title.text
     # because some items have accented letter we want to remove these for safety 
     replace_map={'köök':'kitchen','küte_ja_ventilatsioon':'heating','sanruum':'sanruum','side_ja_turvalisus':'side_ja_turvalisus','ümbrus':'area','lisainfo':'lisainfo'}

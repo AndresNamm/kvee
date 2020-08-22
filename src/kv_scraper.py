@@ -59,7 +59,7 @@ class KVBuilder:
                 logger.error(e)
                 cnt+=1
                 logger.error(f"Trying {cnt} time")
-                time.sleep(3)
+                time.sleep(cnt)
         raise Exception("Connection error, download failed 15 times")
     def fetch_city_objects(self,city, room_nr,deal_type=1):
         start_time = time.time()
@@ -109,7 +109,7 @@ def lambda_handler(event, context):
 
 def main():
     cities= ["tallinn"]
-    rooms=["2"]
+    rooms=["1"]
 
     for c in cities:
         for r in rooms:
