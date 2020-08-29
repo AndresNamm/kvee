@@ -3,7 +3,7 @@ from util_functions.send_email import send_info_email
 import os
 from typing import Final
 from util_functions.athena_queries import AthenaQueries
-
+import json
 #sd
 WRITE_TO_LOCAL_CSV=False
 WRITE_TO_S3=True
@@ -28,13 +28,13 @@ def perform_tests():
             if (v['cnt'] < alarm_basis[k]['cnt']):
                 fail=True
         if fail:
-            send_info_email('Error','More emails than necessare')
-
+            send_info_email(json.dumps(city_counts),'ERROR')
+            
         if not fail:
             query2= 'SELECT * from "dbt"."example_data"'
             df = q.athena_query(query2)
-            data=df.to_string()
-            send_info_email(data, 'example_data')
+            data=df.to_html()
+            send_info_email(data, 'EXAMPLE DATASET')
 
 def lambda_handler(event, context):
     perform_tests()
