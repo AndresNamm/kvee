@@ -2,16 +2,16 @@ import numpy as np
 import collections
 import csv
 import logging
+from typing import Final
 import os
 from util_functions.models import KvObject
 from requests_html import HTMLSession
-LOGLEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
 
+env=os.getenv('ENVIRONMENT','dev')
+log_level: Final[str] = os.getenv('LOGLEVEL', 'INFO')
 
-external_log_level=os.getenv('EXTERNAL_LOG_LEVEL','INFO')
-internal_log_level=os.getenv('INTERNAL_LOG_LEVEL','DEBUG')
-logging.basicConfig(level=external_log_level)
-logging.getLogger(__name__).setLevel(internal_log_level)
+logging.getLogger(__name__).setLevel(log_level)
+logger = logging.getLogger(__name__)
 logger = logging.getLogger(__name__)
 
 def parse_details_from_html(request_response)->dict:

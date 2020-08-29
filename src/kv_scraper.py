@@ -106,6 +106,7 @@ def lambda_handler(event, context):
     deal_type=event["deal_type"]
     room_nr=event["room_nr"]
     scrape_main(city_name,deal_type,room_nr)
+    return {"status":200, "message":"the scraping was successful"}
 
 def main():
     cities= ["tallinn"]

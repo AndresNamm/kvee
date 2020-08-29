@@ -21,7 +21,7 @@ class KvObjectDetails:
     lisainfo:str=""
     side_ja_turvalisus:str=""
     area:str=""
-    url: str = 'https://www.kv.ee/'+ str(id)
+
 
 @dataclass
 class KvObject:
