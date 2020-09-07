@@ -4,6 +4,8 @@ import os
 from typing import Final
 from util_functions.athena_queries import AthenaQueries
 import json
+import pandas as pd
+
 #sd
 WRITE_TO_LOCAL_CSV=False
 WRITE_TO_S3=True
@@ -27,14 +29,25 @@ def perform_tests():
         for k,v in city_counts.items():
             if (v['cnt'] < alarm_basis[k]['cnt']):
                 fail=True
+        # 1 EMAIL
         if fail:
             send_info_email(json.dumps(city_counts),'ERROR')
-            
+        
+        cities=['Tartu','Rakvere','Tallinn']
         if not fail:
+            # 2 EMAIL
             query2= 'SELECT * from "dbt"."example_data"'
             df = q.athena_query(query2)
             data=df.to_html()
             send_info_email(data, 'EXAMPLE DATASET')
+            full_df = pd.DataFrame()
+            # 3 EMAIL
+            for city in cities:
+                query3= f"""SELECT concat('https://www.kv.ee/',id) as url,* FROM "dbt"."active_sale_highest_price_drops" where city = '{city}' order by diff_perc desc limit 20;"""
+                df = q.athena_query(query3)
+                full_df = pd.concat([full_df,df])
+            data=full_df.to_html()  
+            send_info_email(data, 'Suurimad langetajad Tartu,Rakvere,Tallinn',["andres.namm.001@gmail.com","sigridmalinen@gmail.com", "jyrimalinen1@gmail.com", "annemalinen27@gmail.com", "jaan911@gmail.com", "rauno.naksi@gmail.com", "renartupits@gmail.com", "kyllike@namm.ee","andres.namm@namm.ee"])
 
 def lambda_handler(event, context):
     perform_tests()
