@@ -62,10 +62,67 @@ Resources:
                 - "glue:*"
               Resource:
                 - '*'
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - "ses:*"
+              Resource:
+                - '*'
+
       Events:
         UpdateTables:
           Properties:
             Schedule: cron(0 0 * * ? *)
-            Input: '{"object_count":10}'
+            Input: '{"object_count":40}'
           Type: Schedule
-
+        UpdateTables1:
+          Properties:
+            Schedule: cron(0 1 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule
+        UpdateTables2:
+          Properties:
+            Schedule: cron(0 2 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule        
+        UpdateTables3:
+          Properties:
+            Schedule: cron(0 3 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule        
+        UpdateTables4:
+          Properties:
+            Schedule: cron(0 4 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule      
+        UpdateTables5:
+          Properties:
+            Schedule: cron(0 5 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule      
+        UpdateTables6:
+          Properties:
+            Schedule: cron(0 6 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule    
+        UpdateTables7:
+          Properties:
+            Schedule: cron(0 7 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule    
+        UpdateTables8:
+          Properties:
+            Schedule: cron(0 8 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule    
+        UpdateTables9:
+          Properties:
+            Schedule: cron(0 9 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule   
+        UpdateTables10:
+          Properties:
+            Schedule: cron(0 10 * * ? *)
+            Input: '{"object_count":40}'
+          Type: Schedule   

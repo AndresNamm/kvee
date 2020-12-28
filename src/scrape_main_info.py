@@ -23,6 +23,7 @@ import util_functions.s3_utils as s3_utils
 import random
 import string 
 from datetime import datetime
+from util_functions.send_email import send_info_email
 q = AthenaQueries()
 
 
@@ -51,16 +52,6 @@ env=os.getenv('ENVIRONMENT','dev')
 log_level: Final[str] = os.getenv('LOGLEVEL', 'INFO')
 logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
-
-
-# def dict_list_to_df(dlist):
-#     res = {v:[]  for v in map_names.values()}
-#     for element in dlist: 
-#         for k,v in res.items():
-#             temp_val = element[k] if k in element else None
-#             v.append(temp_val)
-#     df = pd.DataFrame(res)
-#     return df
 
 def map_table_names(table):
     res={}
@@ -103,12 +94,32 @@ def add_scraper_objects(lst):
 
 def main(object_count=4, debug=False):
     res = []
-    for obj in read_in_objects(object_count):
-        all_details = get_object_details_info(obj)
-        logger.debug(all_details)
-        res.append(all_details)
+    print("Reading in objects")
+    kv_objects = read_in_objects(object_count)
+    for i in range(0,len(kv_objects),20):
+      batch_limit=i+20 if i+20 < len(kv_objects) else len(kv_objects)
+      failures_in_batch=0
+      for obj in kv_objects[i:batch_limit]:
+        f_cnt=2
+        for i in range(f_cnt):
+          try:
+            all_details = get_object_details_info(obj)
+            if 'status' in all_details :
+              print(f"http://kv.ee/{obj} - {all_details['status']}")
+            else:
+              print(f"http://kv.ee/{obj} - muu")
+            res.append(all_details)
+            break
+          except Exception as e:
+            failures_in_batch+=1
+            if i==1:
+              print(f"Failed to download https://kv.ee/{obj}")
+      if failures_in_batch > 5:
+        send_info_email(BODY_HTML=f"{kv_objects[i:batch_limit]}",SUBJECT="Main Scraper failed")        
+        raise Exception("More than 5 failures in batch")
         
-    add_scraper_objects(res)
+      add_scraper_objects(res)
+      print("Added objects to s3")
     
 def lambda_handler(event, context):
     logger.info("Start execution")
