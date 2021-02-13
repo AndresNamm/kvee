@@ -1,0 +1,27 @@
+{
+  "Comment": "A Hello World example of the Amazon States Language using Pass states",
+  "StartAt": "Invoke Lambda function",
+  "States": {
+"Invoke Lambda function": {
+  "Type": "Task",
+  "Resource": "arn:aws:states:::lambda:invoke",
+  "Parameters": {
+
+    "FunctionName": "arn:aws:lambda:eu-west-1:237864522271:function:prod-kv-ee-scraper:$LATEST",
+    "Payload.$": "$"    
+  },
+  "End": true,
+  "Retry": [
+    {
+      "ErrorEquals": [
+"States.ALL"
+      ],
+      "IntervalSeconds": 900,
+      "BackoffRate": 2,
+      "MaxAttempts": 4
+    }
+  ]
+}
+  }
+}
+

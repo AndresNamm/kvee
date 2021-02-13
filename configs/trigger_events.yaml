@@ -1,0 +1,150 @@
+UpdateRakvere11:
+  Properties:
+    Schedule: cron(20 03 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "1", "room_nr": "1"}'
+  Type: Schedule
+UpdateRakvere12:
+  Properties:
+    Schedule: cron(40 03 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "1", "room_nr": "2"}'
+  Type: Schedule
+UpdateRakvere13:
+  Properties:
+    Schedule: cron(00 04 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "1", "room_nr": "3"}'
+  Type: Schedule
+UpdateRakvere14:
+  Properties:
+    Schedule: cron(20 04 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "1", "room_nr": "4"}'
+  Type: Schedule
+UpdateRakvere15:
+  Properties:
+    Schedule: cron(40 04 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "1", "room_nr": "5"}'
+  Type: Schedule
+UpdateRakvere21:
+  Properties:
+    Schedule: cron(00 05 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "2", "room_nr": "1"}'
+  Type: Schedule
+UpdateRakvere22:
+  Properties:
+    Schedule: cron(20 05 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "2", "room_nr": "2"}'
+  Type: Schedule
+UpdateRakvere23:
+  Properties:
+    Schedule: cron(40 05 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "2", "room_nr": "3"}'
+  Type: Schedule
+UpdateRakvere24:
+  Properties:
+    Schedule: cron(00 06 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "2", "room_nr": "4"}'
+  Type: Schedule
+UpdateRakvere25:
+  Properties:
+    Schedule: cron(20 06 * * ? *)
+    Input: '{"city_name": "rakvere", "deal_type": "2", "room_nr": "5"}'
+  Type: Schedule
+UpdateTallinn11:
+  Properties:
+    Schedule: cron(40 06 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "1", "room_nr": "1"}'
+  Type: Schedule
+UpdateTallinn12:
+  Properties:
+    Schedule: cron(00 07 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "1", "room_nr": "2"}'
+  Type: Schedule
+UpdateTallinn13:
+  Properties:
+    Schedule: cron(20 07 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "1", "room_nr": "3"}'
+  Type: Schedule
+UpdateTallinn14:
+  Properties:
+    Schedule: cron(40 07 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "1", "room_nr": "4"}'
+  Type: Schedule
+UpdateTallinn15:
+  Properties:
+    Schedule: cron(00 08 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "1", "room_nr": "5"}'
+  Type: Schedule
+UpdateTallinn21:
+  Properties:
+    Schedule: cron(20 08 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "2", "room_nr": "1"}'
+  Type: Schedule
+UpdateTallinn22:
+  Properties:
+    Schedule: cron(40 08 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "2", "room_nr": "2"}'
+  Type: Schedule
+UpdateTallinn23:
+  Properties:
+    Schedule: cron(00 09 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "2", "room_nr": "3"}'
+  Type: Schedule
+UpdateTallinn24:
+  Properties:
+    Schedule: cron(20 09 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "2", "room_nr": "4"}'
+  Type: Schedule
+UpdateTallinn25:
+  Properties:
+    Schedule: cron(40 09 * * ? *)
+    Input: '{"city_name": "tallinn", "deal_type": "2", "room_nr": "5"}'
+  Type: Schedule
+UpdateTartu11:
+  Properties:
+    Schedule: cron(00 10 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "1", "room_nr": "1"}'
+  Type: Schedule
+UpdateTartu12:
+  Properties:
+    Schedule: cron(20 10 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "1", "room_nr": "2"}'
+  Type: Schedule
+UpdateTartu13:
+  Properties:
+    Schedule: cron(40 10 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "1", "room_nr": "3"}'
+  Type: Schedule
+UpdateTartu14:
+  Properties:
+    Schedule: cron(00 11 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "1", "room_nr": "4"}'
+  Type: Schedule
+UpdateTartu15:
+  Properties:
+    Schedule: cron(20 11 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "1", "room_nr": "5"}'
+  Type: Schedule
+UpdateTartu21:
+  Properties:
+    Schedule: cron(40 11 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "2", "room_nr": "1"}'
+  Type: Schedule
+UpdateTartu22:
+  Properties:
+    Schedule: cron(00 12 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "2", "room_nr": "2"}'
+  Type: Schedule
+UpdateTartu23:
+  Properties:
+    Schedule: cron(20 12 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "2", "room_nr": "3"}'
+  Type: Schedule
+UpdateTartu24:
+  Properties:
+    Schedule: cron(40 12 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "2", "room_nr": "4"}'
+  Type: Schedule
+UpdateTartu25:
+  Properties:
+    Schedule: cron(00 13 * * ? *)
+    Input: '{"city_name": "tartu", "deal_type": "2", "room_nr": "5"}'
+  Type: Schedule

@@ -22,11 +22,12 @@ WRITE_TO_LOCAL_CSV=False
 WRITE_TO_S3=True
 
 env=os.getenv('ENVIRONMENT','dev')
+
 log_level: Final[str] = os.getenv('LOGLEVEL', 'INFO')
 
-logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
-logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(log_level)
+logging.basicConfig(level=log_level)
 
 # TODO: set this up somewhere els
 #logging.config.fileConfig(fname='logging.conf', disable_existing_loggers=False)
@@ -109,12 +110,14 @@ def lambda_handler(event, context):
     return {"status":200, "message":"the scraping was successful"}
 
 def main():
+    print(1)
+    logger.info(1)
     cities= ["tallinn"]
-    rooms=["1"]
+    rooms=["3"]
 
     for c in cities:
         for r in rooms:
-            scrape_main(city_name=c,deal_type="2",room_nr=r)
+            scrape_main(city_name=c,deal_type="1",room_nr=r)
 
 if __name__ == "__main__":
     main()
