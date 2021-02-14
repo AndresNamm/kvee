@@ -15,9 +15,10 @@ import time
 import json
 from dataclasses import dataclass,asdict
 import time
+from typing import Dict
 
 
-#sd
+
 WRITE_TO_LOCAL_CSV=False
 WRITE_TO_S3=True
 
@@ -77,7 +78,7 @@ class KVBuilder:
 rakvere=City(name="Rakvere",county=7,parish=1050)
 tallinn=City(name="Tallinn",county=1,parish=1061)
 tartu=City(name="Tartu",county=12,parish=1063)
-deals= {"1":"sale","2":"rent"}
+deals:Dict[int,str]= {1:"sale",2:"rent"}
 cities_k={"rakvere":rakvere,"tartu":tartu,"tallinn":tallinn}
     
 
@@ -102,7 +103,7 @@ def scrape_main(city_name="rakvere",deal_type="1",room_nr="1")->None:
         s3_utils.s3_put_rows(list(map(lambda kv_obj_det: json.dumps(kv_obj_det.__dict__),det)),bucketname,object_details_key)
         logger.info(f"Stored {len(det)} object details to S3 s3://{bucketname}/{object_details_key}")
 
-def lambda_handler(event, context):
+def lambda_handler(event, context=None):
     city_name=event["city_name"]
     deal_type=event["deal_type"]
     room_nr=event["room_nr"]
@@ -112,8 +113,8 @@ def lambda_handler(event, context):
 def main():
     print(1)
     logger.info(1)
-    cities= ["tallinn"]
-    rooms=["3"]
+    cities= ["rakvere"]
+    rooms=["4"]
 
     for c in cities:
         for r in rooms:

@@ -27,7 +27,11 @@ def parse_details_from_html(request_response)->dict:
     for line in raw_absolute_size.text.split('\n'):
         if 'Pind:' in line:      
             parsed_dic['abs_size'] = line.split(':')[1].strip().split('\xa0')[0]
-    parsed_dic['abs_price'] = int("".join(raw_absolute_price.text.split( '\xa0' )[:-1]))
+    raw_absolute_price_text:str=raw_absolute_price.text
+    if raw_absolute_price_text.startswith("Uus hind!"):
+      raw_absolute_price_text=raw_absolute_price_text.split('\n')[0]
+      raw_absolute_price_text=raw_absolute_price_text[10:]
+    parsed_dic['abs_price'] = int("".join(raw_absolute_price_text.split( '\xa0' )[:-1]))
     parsed_dic['title']=raw_title.text
     # because some items have accented letter we want to remove these for safety 
     replace_map={'köök':'kitchen','küte_ja_ventilatsioon':'heating','sanruum':'sanruum','side_ja_turvalisus':'side_ja_turvalisus','ümbrus':'area','lisainfo':'lisainfo'}
