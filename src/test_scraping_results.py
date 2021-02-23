@@ -21,7 +21,7 @@ q = AthenaQueries()
 
 all_emails=["andres.namm.001@gmail.com","sigridmalinen@gmail.com", "jyrimalinen1@gmail.com", "annemalinen27@gmail.com", "jaan911@gmail.com", "rauno.naksi@gmail.com", "renartupits@gmail.com", "kyllike@namm.ee","andres.namm@namm.ee","mart.randala@gmail.com"]
 main_man=["andres.namm.001@gmail.com"]
-alarm_basis = {'Rakvere-1': {'cnt': 5}, 'Rakvere-2': {'cnt': 18}, 'Rakvere-3': {'cnt': 15}, 'Rakvere-4': {'cnt': 0}, 'Tallinn-1': {'cnt': 719}, 'Tallinn-2': {'cnt': 1399}, 'Tallinn-3': {'cnt': 1043}, 'Tallinn-4': {'cnt': 409}, 'Tallinn-5': {'cnt': 70}, 'Tartu-1': {'cnt': 157}, 'Tartu-2': {'cnt': 334}, 'Tartu-3': {'cnt': 291}, 'Tartu-4': {'cnt': 109}, 'Tartu-5': {'cnt': 2}}
+alarm_basis = {'Rakvere-1': {'cnt': 5}, 'Rakvere-2': {'cnt': 18}, 'Rakvere-3': {'cnt': 15}, 'Rakvere-4': {'cnt': 0}, 'Tallinn-1': {'cnt': 719}, 'Tallinn-2': {'cnt': 1399}, 'Tallinn-3': {'cnt': 1043}, 'Tallinn-4': {'cnt': 409}, 'Tallinn-5': {'cnt': 50}, 'Tartu-1': {'cnt': 157}, 'Tartu-2': {'cnt': 334}, 'Tartu-3': {'cnt': 291}, 'Tartu-4': {'cnt': 109}, 'Tartu-5': {'cnt': 2}}
 
 def perform_tests():
         query = 'SELECT * from "dbt"."yesterday_count"'

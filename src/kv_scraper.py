@@ -114,11 +114,11 @@ def main():
     print(1)
     logger.info(1)
     cities= ["rakvere"]
-    rooms=["4"]
+    rooms=[4]
 
     for c in cities:
         for r in rooms:
-            scrape_main(city_name=c,deal_type="1",room_nr=r)
+            scrape_main(city_name=c,deal_type=1,room_nr=r)
 
 if __name__ == "__main__":
     main()
